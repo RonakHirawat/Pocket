@@ -123,17 +123,39 @@ export default function App() {
   const addExpense = (event) => {
     event?.preventDefault();
     const parsed = parseEntry(entry);
+    const normalizeCategoryKey = (name) =>
+        name.trim().replace(/\s+/g, " ").toLowerCase();
+
+    const formatCategoryName = (name) => {
+      const clean = name.trim().replace(/\s+/g, " ");
+      return clean.charAt(0).toUpperCase() + clean.slice(1);
+    };
     if (!parsed) {
       setNotice("Try this format: milk : 40");
       inputRef.current?.focus();
       return;
     }
-    setTransactions((old) => [{
-      id: crypto.randomUUID(),
-      name: parsed.name.charAt(0).toUpperCase() + parsed.name.slice(1),
-      amount: parsed.amount,
-      createdAt: new Date().toISOString()
-    }, ...old]);
+    setTransactions((old) => {
+      const existingCategory = old.find(
+          (t) =>
+              normalizeCategoryKey(t.name) ===
+              normalizeCategoryKey(parsed.name)
+      );
+
+      const categoryName = existingCategory
+          ? existingCategory.name
+          : formatCategoryName(parsed.name);
+
+      return [
+        {
+          id: crypto.randomUUID(),
+          name: categoryName,
+          amount: parsed.amount,
+          createdAt: new Date().toISOString(),
+        },
+        ...old,
+      ];
+    });
     setEntry("");
     setNotice(`${parsed.name} · ${money(parsed.amount)} added`);
     inputRef.current?.focus();
