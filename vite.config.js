@@ -22,12 +22,12 @@ export default defineConfig({
         scope: '/Pocket/',
         icons: [
           {
-            src: 'icons/pocket-logo.png',
+            src: 'icons/pocket-logo-192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'icons/pocket-logo.png',
+            src: 'icons/pocket-logo-512.png',
             sizes: '512x512',
             type: 'image/png'
           }
